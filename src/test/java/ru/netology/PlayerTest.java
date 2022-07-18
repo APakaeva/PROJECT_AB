@@ -1,6 +1,5 @@
 package ru.netology;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
@@ -24,7 +23,7 @@ public class PlayerTest {
 
     @Test
     public void shouldThrowRuntimeExceptionWhenPlayUninstalledGame() {
-        assertThrows(RuntimeException.class, ()-> {
+        assertThrows(RuntimeException.class, () -> {
             player1.play(game, 3);
         });
     }
