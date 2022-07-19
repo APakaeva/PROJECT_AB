@@ -42,10 +42,19 @@ public class GameStoreTest {
         GameStore store = new GameStore();
         store.addPlayTime("Kate69", 2);
         store.addPlayTime("Kate69", 1);
-        int expected = 3;
-        int actual = store.getSumPlayedTime();
-        Assertions.assertEquals(expected, actual);
+        assertEquals(3, store.getPlayedTime("Kate69"));
     }
+
+    @Test // сумма часов игроков в 1 каталоге
+    public void shouldSumTime() {
+        GameStore store = new GameStore();
+        store.addPlayTime("Kate69", 1);
+        store.addPlayTime("Mate", 1);
+        store.addPlayTime("Starroxy", 1);
+        store.addPlayTime("Yuki", 3);
+        assertEquals(6, store.getSumPlayedTime());
+    }
+
 
     @Test // ищет игрока, который проиграл больше всего времени среди отсутствующих игроков(граничные)
     public void shouldShowMostPlayedPlayer() {
@@ -93,13 +102,11 @@ public class GameStoreTest {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
         store.addPlayTime("Kate69", 1);
-        store.addPlayTime("Kate69", 0);
         store.addPlayTime("Kate69", 3);
         assertEquals(4, store.getSumPlayedTime());
     }
 
     @Test // сумма часов 2х игроков в 2 каталогах
-    // метод getSumPlayedTime не дописан
     public void shouldShowSumTimeTwoPlayersTwoCatalogs() {
         GameStore store = new GameStore();
         GameStore store2 = new GameStore();
@@ -112,7 +119,6 @@ public class GameStoreTest {
     }
 
     @Test // сумма часов с 2х игроков, один из них 0ч
-    // метод getSumPlayedTime не дописан
     public void shouldShowSumTimeTwoPlayers0Hours() {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
