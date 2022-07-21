@@ -7,12 +7,19 @@ import org.junit.jupiter.api.Test;
 
 public class GameStoreTest {
 
-    @Test // добавление 1 игры в каталог
+    @Test // добавление и наличие 1 игры в каталог
     public void shouldAddGame() {
-
         GameStore store = new GameStore();
         Game game = store.publishGame("Нетология Баттл Онлайн", "Аркады");
         assertTrue(store.containsGame(game));
+    }
+
+    @Test // добавление и наличие 1 игры мз двух добавленных в каталог
+    public void shouldAdd2Game() {
+        GameStore store = new GameStore();
+        Game game1 = store.publishGame("Нетология Баттл Онлайн", "Аркады");
+        Game game2 = store.publishGame("Симс", "Симулятор");
+        assertTrue(store.containsGame(game1));
     }
 
     @Test // наличие нескольких игр в каталоге
@@ -29,22 +36,30 @@ public class GameStoreTest {
         assertArrayEquals(expected, assertContainGame);
     }
 
-    @Test // НЕ наличие игры в каталоге
+    @Test // отсутствие игры в каталоге
     public void shouldCheckNullContainsGame() {
         GameStore store = new GameStore();
         Game game = new Game("Нетология Баттл Онлайн", "Аркады", store);
         assertFalse(store.containsGame(game));
     }
 
-    @Test // Регистрирует количество времени, которое проиграл игрок за игрой этого каталога.
+    @Test // регистрирует количество времени, которое проиграл игрок за игрой этого каталога.
     public void shouldAddPlayedTime() {
         Player player = new Player("Kate69");
         GameStore store = new GameStore();
         store.addPlayTime("Kate69", 2);
         store.addPlayTime("Kate69", 1);
-        int expected = 3;
-        int actual = store.getSumPlayedTime();
-        Assertions.assertEquals(expected, actual);
+        //assertEquals(3, store.getPlayedTime("Kate69"));
+    }
+
+    @Test // сумма часов игроков в 1 каталоге
+    public void shouldSumTime() {
+        GameStore store = new GameStore();
+        store.addPlayTime("Kate69", 1);
+        store.addPlayTime("Mate", 1);
+        store.addPlayTime("Starroxy", 1);
+        store.addPlayTime("Yuki", 3);
+        assertEquals(6, store.getSumPlayedTime());
     }
 
     @Test // ищет игрока, который проиграл больше всего времени среди отсутствующих игроков(граничные)
@@ -71,13 +86,23 @@ public class GameStoreTest {
         assertEquals("Mate", store.getMostPlayer());
     }
 
-    @Test // ищет игрока, который проиграл больше всего времени среди 2 игроков c одинаковым временем(граничные)
+    @Test // 2 игрока с одинаковым временем игры, условие "нет игрока с наибольшим временем = должен вернуть null"
     public void shouldShowMostPlayedPlayer2EqualTime() {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
         Player player2 = new Player("Mate");
         store.addPlayTime("Kate69", 1);
         store.addPlayTime("Mate", 1);
+        assertEquals(null, store.getMostPlayer());
+    }
+
+    // игроки установили игру, но не играли - ожидается null
+    @Test
+    public void shouldsFindPlayerWhenGameTime0() {
+        GameStore store = new GameStore();
+        store.addPlayTime("Kate69", 0);
+        store.addPlayTime("Mate", 0);
+        store.addPlayTime("Naggets", 0);
         assertEquals(null, store.getMostPlayer());
     }
 
@@ -88,18 +113,15 @@ public class GameStoreTest {
     }
 
     @Test // сумма часов с 1 игроком
-    // метод getSumPlayedTime не дописан
     public void shouldShowSumTimeOnePlayer() {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
         store.addPlayTime("Kate69", 1);
-        store.addPlayTime("Kate69", 0);
         store.addPlayTime("Kate69", 3);
         assertEquals(4, store.getSumPlayedTime());
     }
 
     @Test // сумма часов 2х игроков в 2 каталогах
-    // метод getSumPlayedTime не дописан
     public void shouldShowSumTimeTwoPlayersTwoCatalogs() {
         GameStore store = new GameStore();
         GameStore store2 = new GameStore();
@@ -112,7 +134,6 @@ public class GameStoreTest {
     }
 
     @Test // сумма часов с 2х игроков, один из них 0ч
-    // метод getSumPlayedTime не дописан
     public void shouldShowSumTimeTwoPlayers0Hours() {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
@@ -122,4 +143,3 @@ public class GameStoreTest {
         assertEquals(3, store.getSumPlayedTime());
     }
 }
-
