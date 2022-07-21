@@ -1,7 +1,5 @@
 package ru.netology;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
@@ -51,7 +49,6 @@ public class PlayerTest {
         int actual = player1.getPlayedTimeGame(game);
         assertEquals(expected, actual);
     }
-
     @Test
     public void shouldNotInstallTheSameGameTwice() {
         player1.installGame(game);
@@ -65,7 +62,7 @@ public class PlayerTest {
 
     @Test
     public void shouldThrowRuntimeExceptionWhenPlayUninstalledGame() {
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RuntimeException.class, ()-> {
             player1.play(game, 3);
         });
     }
