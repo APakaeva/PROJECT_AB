@@ -40,11 +40,13 @@ public class Player {
      * если игра не была установлена, то надо выкидывать RuntimeException
      */
     public int play(Game game, int hours) {
-        game.getStore().addPlayTime(name, hours);
-        if (playedTime.containsKey(game)) {
-            playedTime.put(game, (playedTime.get(game) + hours));
-        } else {
-            throw new RuntimeException("Игра не была установлена");
+        if (hours > 0) {
+            game.getStore().addPlayTime(name, hours);
+            if (playedTime.containsKey(game)) {
+                playedTime.put(game, (playedTime.get(game) + hours));
+            } else {
+                throw new RuntimeException("Игра не была установлена");
+            }
         }
         return playedTime.get(game);
     }
@@ -81,4 +83,13 @@ public class Player {
         }
         return mostGame;
     }
+
+    public int getPlayedTimeGame(Game game) {
+        if (playedTime.containsKey(game)) {
+            return playedTime.get(game);
+        } else {
+            return -1;
+        }
+    }
 }
+

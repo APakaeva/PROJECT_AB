@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+
 public class GameStoreTest {
 
     @Test // добавление и наличие 1 игры в каталог
@@ -49,7 +51,7 @@ public class GameStoreTest {
         GameStore store = new GameStore();
         store.addPlayTime("Kate69", 2);
         store.addPlayTime("Kate69", 1);
-        //assertEquals(3, store.getPlayedTime("Kate69"));
+        assertEquals(3, store.getPlayedTime("Kate69"));
     }
 
     @Test // сумма часов игроков в 1 каталоге
@@ -63,42 +65,63 @@ public class GameStoreTest {
     }
 
     @Test // ищет игрока, который проиграл больше всего времени среди отсутствующих игроков(граничные)
-    public void shouldShowMostPlayedPlayer() {
+    public void shouldShowMostPlayerIfNone() {
         GameStore store = new GameStore();
         assertEquals(null, store.getMostPlayer());
     }
 
     @Test // ищет игрока, который проиграл больше всего времени среди 1 игрока(граничные)
-    public void shouldShowMostPlayedPlayer1() {
+    public void shouldShowMostWhenOnePlayer() {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
-        store.addPlayTime("Kate69", 1);
-        assertEquals("Kate69", store.getMostPlayer());
+        store.addPlayTime(player1.getName(), 1);
+        HashSet<String> expected = new HashSet<>();
+        expected.add("Kate69");
+        assertEquals(expected, store.getMostPlayer());
     }
 
     @Test // ищет игрока, который проиграл больше всего времени среди 2 игроков(граничные)
-    public void shouldShowMostPlayedPlayer2() {
+    public void shouldShowMostOfTwoPlayers() {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
         Player player2 = new Player("Mate");
-        store.addPlayTime("Kate69", 1);
-        store.addPlayTime("Mate", 2);
-        assertEquals("Mate", store.getMostPlayer());
+        store.addPlayTime(player1.getName(), 1);
+        store.addPlayTime(player2.getName(), 2);
+        HashSet<String> expected = new HashSet<>();
+        expected.add("Mate");
+        assertEquals(expected, store.getMostPlayer());
     }
 
-    @Test // 2 игрока с одинаковым временем игры, условие "нет игрока с наибольшим временем = должен вернуть null"
-    public void shouldShowMostPlayedPlayer2EqualTime() {
+    @Test // 2 игрока с одинаковым временем игры - будут показаны оба
+    public void shouldShowMostPlayerOfTwoIfEqualTime() {
         GameStore store = new GameStore();
         Player player1 = new Player("Kate69");
         Player player2 = new Player("Mate");
-        store.addPlayTime("Kate69", 1);
-        store.addPlayTime("Mate", 1);
-        assertEquals(null, store.getMostPlayer());
+        store.addPlayTime(player1.getName(), 1);
+        store.addPlayTime(player2.getName(), 1);
+        HashSet<String> expected = new HashSet<>();
+        expected.add("Kate69");
+        expected.add("Mate");
+        assertEquals(expected, store.getMostPlayer());
     }
 
-    // игроки установили игру, но не играли - ожидается null
-    @Test
-    public void shouldsFindPlayerWhenGameTime0() {
+    @Test // 2 игрока с одинаковым временем игры - будут показаны оба, всего трое
+    public void shouldShowMostPlayerOfThreeIfEqualTimeOfTwo() {
+        GameStore store = new GameStore();
+        Player player1 = new Player("Kate69");
+        Player player2 = new Player("Mate");
+        Player player3 = new Player("Lydia");
+        store.addPlayTime(player1.getName(), 3);
+        store.addPlayTime(player2.getName(), 3);
+        store.addPlayTime(player3.getName(), 1);
+        HashSet<String> expected = new HashSet<>();
+        expected.add("Kate69");
+        expected.add("Mate");
+        assertEquals(expected, store.getMostPlayer());
+    }
+
+    @Test    // игроки установили игру, но не играли - ожидается null
+    public void shouldFindPlayerWhenPlayedTime0() {
         GameStore store = new GameStore();
         store.addPlayTime("Kate69", 0);
         store.addPlayTime("Mate", 0);
