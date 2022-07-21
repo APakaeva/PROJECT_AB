@@ -40,12 +40,14 @@ public class Player {
      * если игра не была установлена, то надо выкидывать RuntimeException
      */
     public int play(Game game, int hours) {
+        if (hours > 0) {
             game.getStore().addPlayTime(name, hours);
             if (playedTime.containsKey(game)) {
                 playedTime.put(game, (playedTime.get(game) + hours));
             } else {
                 throw new RuntimeException("Игра не была установлена");
             }
+        }
         return playedTime.get(game);
     }
 
@@ -68,24 +70,25 @@ public class Player {
      * Если в игры этого жанра не играли, возвращается null
      */
     public Game mostPlayerByGenre(String genre) {
-        Map<Game, Integer> oneGenre = new HashMap<>();
-        Game mostPlayedGame = null;
+        int time = 0;
+        Game mostGame = null;
         for (Game game : playedTime.keySet()) {
             if (game.getGenre().equals(genre)) {
-                oneGenre.put(game, playedTime.get(game));
+                int gameTime = playedTime.get(game);
+                if (gameTime > time) {
+                    time = gameTime;
+                    mostGame = game;
+                }
             }
         }
-        if (!oneGenre.isEmpty()) {
-            Map<Game, Integer> result = new LinkedHashMap<>();
-            Stream<Map.Entry<Game, Integer>> tmp = oneGenre.entrySet().stream();
-            tmp.sorted(Map.Entry.comparingByValue())
-                    .forEach(e -> result.put(e.getKey(), e.getValue()));
-            Integer maxValue = new LinkedList<Integer>(result.values()).getLast();
-            if (maxValue != 0) {
-                Game[] key = result.keySet().toArray(new Game[result.size()]);
-                mostPlayedGame = key[key.length - 1];
-            }
+        return mostGame;
+    }
+
+    public int getPlayedTimeGame(Game game) {
+        if (playedTime.containsKey(game)) {
+            return playedTime.get(game);
+        } else {
+            return -1;
         }
-        return mostPlayedGame;
     }
 }
