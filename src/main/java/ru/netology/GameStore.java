@@ -61,9 +61,10 @@ public class GameStore {
     }
 
 
-     //* Ищет имя игрока, который играл в игры этого каталога больше всего
+
+    //* Ищет имя игрока, который играл в игры этого каталога больше всего
     // времени. Если игроков нет, то возвращется null
-     //
+    //
     public HashSet<String> getMostPlayer() {
         HashSet<String> most = new HashSet<>();
         int mostTime = 0;
@@ -84,15 +85,15 @@ public class GameStore {
             }
         }
         if (!most.isEmpty()) {
-        return most;
+            return most;
         } else {
             return null;
         }
     }
 
-   //
+    //
     //Суммирует общее количество времени всех игроков, проведённого
-     //* за играми этого каталога
+    //* за играми этого каталога
     //
     public int getSumPlayedTime() {
         int sum = 0;
